@@ -13,5 +13,21 @@ export const register =async (req,res)=>{
     
 };
 
+export const login =async(req,res)=>{
+    const{email,password}=req.body;
 
+    const [rows]=await db.query("SELECT * FROM users WHERE email=?",[email]);
+    if(!rows.length){
+        return res.status(404).json("USER NOT REGISTERED");
+
+
+    }
+    const valid=await bcrypt.compare(password,rows[0].password);
+    if(!valid){
+        return res.status(400).json("WRONG PASSWORD OR EMAIL");
+    }
+
+    const token=jwt.sign({id:rows[0].id},process.env.JWT_SECRET,{expiresIn:'1h'});
+    res.json({token});
+}
 
