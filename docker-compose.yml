@@ -1,4 +1,4 @@
-version: "3.8"
+# version: "3.8"
 
 services:
   backend:
@@ -12,14 +12,14 @@ services:
       - ./backend/.env
 
   frontend:
-    build: ./frontend
+    build: ./frontend/vite-project
     ports:
       - "5173:5173"
 
   mysql:
     image: mysql:8
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: anandshukla$15
       MYSQL_DATABASE: ai_dashboard
     ports:
       - "3306:3306"
