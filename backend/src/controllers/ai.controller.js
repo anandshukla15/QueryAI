@@ -1,53 +1,54 @@
-import {openai} from "../config/openai.config.js";
-import {db} from "../config/db.js";
-import {reddisClient} from "../config/redis.config.js";
+import { geminiModel } from "../config/gemini.js";
+import { db } from "../config/db.js";
+import { redisClient } from "../config/redis.js";
 
 export const askAI = async (req, res) => {
-    const {question} = req.body;
+  try {
+    const { question } = req.body;
     const userId = req.user.id;
 
-    const cached=await reddisClient.get(question);
-    if(cached){
-        return  res.json({source:"cache",data: JSON.parse(cached)});
+    // 🔥 Redis cache
+    const cached = await redisClient.get(question);
+    if (cached) {
+      return res.json({ source: "cache", data: JSON.parse(cached) });
     }
 
-    const prompt = `
+    // 🧠 Step 1 — Convert NL → SQL
+    const sqlPrompt = `
 You are a MySQL expert.
 Database tables:
 sales(id, amount, created_at)
 
 Convert this question into SQL only:
 "${question}"
+Return ONLY SQL, no explanation.
 `;
-     const completion=await openai.chat.completions.create({
-        model:"gemini-2.5-flash",
-        messages:[{
-            role:"user",
-            content: prompt}],
-        });
 
+    const sqlResult = await geminiModel.generateContent(sqlPrompt);
+    const sql = sqlResult.response.text().trim().replace(/```sql|```/g, "");
 
-     const sql=   completion.choices[0].message[0].content;
+    // 🛢 Step 2 — Execute SQL
+    const [rows] = await db.query(sql);
 
-     const [rows] = await db.query(sql);
+    // 🧠 Step 3 — Explain result
+    const explanationPrompt = `
+Here is SQL result:
+${JSON.stringify(rows)}
 
-
-     // i am asking ai to explain the result in business language
-     const explanationPrompt=`Here is SQL result: ${JSON.stringify(rows)}
 Explain this in simple business language.
 `;
-        const explanationRes=await openai.chat.completions.create({
-        model:"gemini-2.5-flash",
-        messages:[{
-            role:"user",
-            content: explanationPrompt}],
-        });
-        
-        const explanation=explanationRes.choices[0].message[0].content;
-        const responseData={sql, rows,explanation};
 
-        //saving data to redis cache for 1 hour
-        await reddisClient.setEx(question,3600,JSON.stringify(responseData));
+    const explanationResult = await geminiModel.generateContent(explanationPrompt);
+    const explanation = explanationResult.response.text().trim();
 
-        res.json(responseData);
-}
+    const responseData = { sql, rows, explanation };
+
+    // ⏳ Cache for 1 hour
+    await redisClient.setEx(question, 3600, JSON.stringify(responseData));
+
+    res.json(responseData);
+  } catch (error) {
+    console.error("AI Error:", error);
+    res.status(500).json({ error: "AI processing failed" });
+  }
+};

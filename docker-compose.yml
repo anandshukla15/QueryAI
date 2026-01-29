@@ -22,7 +22,7 @@ services:
       MYSQL_ROOT_PASSWORD: anandshukla$15
       MYSQL_DATABASE: ai_dashboard
     ports:
-      - "3306:3306"
+      - "3307:3306"
 
   redis:
     image: redis:7
