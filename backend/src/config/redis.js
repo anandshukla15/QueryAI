@@ -1,7 +1,11 @@
-import Redis from "redis";
+import { createClient } from "redis";
 
-export const redisClient = Redis.createClient({
-  url: "redis://redis:6379",
+const REDIS_URL = "redis://localhost:6379";
+
+export const redisClient = createClient({
+  url: REDIS_URL,
 });
+
+redisClient.on("error", (err) => console.log("Redis Error:", err));
 
 await redisClient.connect();

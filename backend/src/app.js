@@ -9,6 +9,6 @@ app.use(cors());
 app.use(express.json());
 
 
-app.use('/auth', authRoutes);
-app.use('/ai', aiRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/ai', aiRoutes);
 export default app;
