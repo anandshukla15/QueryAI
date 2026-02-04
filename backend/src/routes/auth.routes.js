@@ -1,15 +1,15 @@
 import express from 'express';
-import { register,login } from '../controllers/auth.controller.js';
+import { register, login } from '../controllers/auth.controller.js';
 
-const router=express.Router();
+console.log("AUTH ROUTES FILE LOADED");
 
-router.post('/register',register);
-router.post('/login',login);
-
+const router = express.Router();
 
 router.post('/register', (req, res, next) => {
-  console.log("REGISTER HIT");
+  console.log("REGISTER ROUTE HIT");
   next();
 }, register);
+
+router.post('/login', login);
 
 export default router;

@@ -1,13 +1,13 @@
-# version: "3.8"
-
 services:
   backend:
     build: ./backend
     ports:
-      - "5000:5000"
+      - "8000:8000"
     depends_on:
-      - mysql
-      - redis
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy
     env_file:
       - ./backend/.env
 
@@ -23,8 +23,18 @@ services:
       MYSQL_DATABASE: ai_dashboard
     ports:
       - "3307:3306"
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
-    image: redis:7
+    image: redis:latest
     ports:
       - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
