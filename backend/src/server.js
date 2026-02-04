@@ -1,7 +1,7 @@
 import app from './app.js';
 
 const PORT =  8000;
-//console.log(`Server is running on port ${PORT}`);
+console.log(`Server is running on port ${PORT}`);
 
 app.get('/', (req, res) => {
   res.send('Welcome to the QueryAI Backend Server!');
