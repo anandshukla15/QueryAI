@@ -5,10 +5,7 @@ console.log("AUTH ROUTES FILE LOADED");
 
 const router = express.Router();
 
-router.post('/register', (req, res, next) => {
-  console.log("REGISTER ROUTE HIT");
-  next();
-}, register);
+router.post('/register', register);
 
 router.post('/login', login);
 
