@@ -23,7 +23,7 @@ export default async function initDb() {
   `;
 
   try {
-    // Ensure database exists first (connect without database)
+    
     console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB_NAME}`);
     const conn = await mysql.createConnection({
       host: DB_HOST,
