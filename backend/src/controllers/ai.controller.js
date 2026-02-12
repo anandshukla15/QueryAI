@@ -13,7 +13,7 @@ export const askAI = async (req, res) => {
       return res.json({ source: "cache", data: JSON.parse(cached) });
     }
 
-    // 🧠 Step 1 — Convert NL → SQL
+    
     const sqlPrompt = `
 You are a MySQL expert.
 Database tables:
