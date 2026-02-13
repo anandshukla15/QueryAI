@@ -43,7 +43,7 @@ Explain this in simple business language.
 
     const responseData = { sql, rows, explanation };
 
-    // ⏳ Cache for 1 hour
+   
     await redisClient.setEx(question, 3600, JSON.stringify(responseData));
 
     res.json(responseData);
