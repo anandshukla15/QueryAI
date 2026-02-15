@@ -30,7 +30,6 @@ Return ONLY SQL, no explanation.
     // 🛢 Step 2 — Execute SQL
     const [rows] = await db.query(sql);
 
-    // 🧠 Step 3 — Explain result
     const explanationPrompt = `
 Here is SQL result:
 ${JSON.stringify(rows)}
