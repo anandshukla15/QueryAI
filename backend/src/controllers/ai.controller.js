@@ -7,6 +7,9 @@ export const askAI = async (req, res) => {
     const { question } = req.body;
     const userId = req.user.id;
 
+    console.log("API KEY:", process.env.GEMINI_API_KEY);
+
+
     // 🔥 Redis cache
     const cached = await redisClient.get(question);
     if (cached) {

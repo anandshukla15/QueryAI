@@ -6,11 +6,8 @@ export default async function initDb() {
   const DB_USER = process.env.DB_USER || 'root';
   const DB_PASSWORD = process.env.DB_PASSWORD || 'anandshukla$15';
   const DB_NAME = process.env.DB_NAME || 'ai_dashboard';
-  const DB_PORT = process.env.DB_PORT
-    ? Number(process.env.DB_PORT)
-    : (process.env.DB_HOST === undefined || DB_HOST === '127.0.0.1')
-    ? 3307
-    : 3306;
+  const DB_PORT = Number(process.env.DB_PORT);
+
 
   const createUsers = `
   CREATE TABLE IF NOT EXISTS users (
@@ -21,6 +18,15 @@ export default async function initDb() {
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   ) ENGINE=INNODB;
   `;
+
+  const createSales = `
+CREATE TABLE IF NOT EXISTS sales (
+  id INT PRIMARY KEY AUTO_INCREMENT,
+  product_name VARCHAR(255),
+  amount DECIMAL(10,2),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+) ENGINE=INNODB;
+`;
 
   try {
     
@@ -36,7 +42,8 @@ console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB
 
     // Then create table using existing pool which targets the DB
     await db.query(createUsers);
-    console.log('DB: ensured database and users table exist');
+    await db.query(createSales);
+    console.log('DB: ensured database and users/sales tables exist');
   } catch (err) {
     console.error('DB init error:', err);
     throw err;

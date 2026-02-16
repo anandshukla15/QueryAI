@@ -3,6 +3,9 @@ services:
     build: ./backend
     ports:
       - "8000:8000"
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
     depends_on:
       redis:
         condition: service_healthy
@@ -10,11 +13,16 @@ services:
         condition: service_healthy
     env_file:
       - ./backend/.env
+    command: npm run dev
 
   frontend:
     build: ./frontend/vite-project
     ports:
       - "5173:5173"
+    volumes:
+      - ./frontend/vite-project:/app
+      - /app/node_modules
+    command: npm run dev
 
   mysql:
     image: mysql:8
