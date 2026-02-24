@@ -40,7 +40,6 @@ console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB
     await conn.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\``);
     await conn.end();
 
-
     await db.query(createUsers);
     await db.query(createSales);
     console.log('DB: ensured database and users/sales tables exist');
