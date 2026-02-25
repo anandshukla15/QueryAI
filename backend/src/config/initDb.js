@@ -28,6 +28,19 @@ CREATE TABLE IF NOT EXISTS sales (
 ) ENGINE=INNODB;
 `;
 
+const createHistory = `
+CREATE TABLE IF NOT EXISTS query_history (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  user_id INT,
+  question TEXT,
+  sql_query TEXT,
+  result JSON,
+  explanation TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+) ENGINE=INNODB;
+`;
+
   try {
     
 console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB_NAME}`);
@@ -42,7 +55,8 @@ console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB
 
     await db.query(createUsers);
     await db.query(createSales);
-    console.log('DB: ensured database and users/sales tables exist');
+    await db.query(createHistory);
+    console.log('DB: ensured database and users/sales/query_history tables exist');
   } catch (err) {
     console.error('DB init error:', err);
     throw err;
