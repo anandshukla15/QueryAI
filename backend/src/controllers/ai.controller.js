@@ -7,7 +7,7 @@ export const askAI = async (req, res) => {
     const { question } = req.body;
     const userId = req.user.id;
 
-    // 🔹 Get last 3 queries
+    
     const [history] = await db.query(
       "SELECT question, sql_query FROM query_history WHERE user_id=? ORDER BY created_at DESC LIMIT 3",
       [userId]
@@ -17,7 +17,7 @@ export const askAI = async (req, res) => {
       .map(h => `Previous Question: ${h.question}\nSQL: ${h.sql_query}`)
       .join("\n");
 
-    const sqlPrompt = `
+    const sqlPrompt  = `
 You are a senior MySQL analyst.
 
 Previous context:
