@@ -56,7 +56,7 @@ console.log(`DB init connecting to ${DB_HOST}:${DB_PORT} to ensure database ${DB
     await db.query(createUsers);
     await db.query(createSales);
     await db.query(createHistory);
-    console.log('DB: ensured database and users/sales/query_history tables exist');
+    console.log('DB: ensured database and users/sales/q tables exist');
   } catch (err) {
     console.error('DB init error:', err);
     throw err;
