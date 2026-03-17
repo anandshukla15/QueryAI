@@ -13,6 +13,7 @@ app.use(express.json());
 // app.post('/api/auth/register', (req, res) => {
 //   console.log("DIRECT REGISTER HIT");
 //   res.send("OK");
+
 // });
 app.use('/api/ai', aiRoutes);
 export default app;
